@@ -29,7 +29,7 @@ It guides undergraduate students through a practical RNA-seq data analysis workf
 
 ## 🧪 Pipeline Steps
 
-```mermaid
+<pre><code>```mermaid
 graph TD
   A[Start] --> B[Directory Setup]
   B --> C[Tool Installation (via Bioconda)]
@@ -39,6 +39,8 @@ graph TD
   F --> G[Counting (Subread/featureCounts)]
   G --> H[DESeq2 Analysis + Visualization]
   H --> I[Output Files]
+```</code></pre>
+
 
 ---
 
