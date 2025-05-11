@@ -1,14 +1,33 @@
 # 🧬 RNA-Seq Differential Expression Pipeline
 
-> 🔬 *End-to-end workflow for preprocessing, aligning, counting, and analyzing paired-end RNA-seq data.*
+> A reproducible RNA-seq analysis pipeline for educational and research use
+
+---
+
+This repository provides a structured pipeline for analyzing paired-end RNA-Seq data. It covers preprocessing, alignment, quantification, and differential expression analysis using open-source tools.  
+The pipeline was developed as part of the **Next Generation Sequencing (NGS)** course at the **School of Biotechnology, Nile University, Egypt**.
+
+---
+
+## 📑 Table of Contents
+- [Educational Context](#educational-context)
+- [Dataset Overview](#dataset-overview)
+- [Pipeline Steps](#pipeline-steps)
+- [Tools Used](#️tools-used)
+- [Folder Structure](#folder-structure)
+- [How to Run](#how-to-run)
+- [Output](#output)
+- [System Requirements](#system-requirements)
+- [Example Output Files](#example-output-files)
+- [Instructor](#instructor)
+- [License](#license)
 
 ---
 
 ## 📚 Educational Context
 
-This pipeline was designed as a teaching resource for the **Next Generation Sequencing (NGS)** course  
-at the **School of Biotechnology, Nile University, Egypt**.  
-It guides undergraduate students through a practical RNA-seq data analysis workflow using real tools and datasets.
+This pipeline was designed for undergraduate students enrolled in the NGS course.  
+It provides hands-on experience with standard tools and workflows in transcriptomics.
 
 ---
 
@@ -29,18 +48,31 @@ It guides undergraduate students through a practical RNA-seq data analysis workf
 
 ## 🧪 Pipeline Steps
 
-<pre><code>```mermaid
-graph TD
-  A[Start] --> B[Directory Setup]
-  B --> C[Tool Installation (via Bioconda)]
-  C --> D[Quality Control (FastQC + MultiQC)]
-  D --> E[Trimming (Trimmomatic)]
-  E --> F[Alignment (BWA + SAMtools)]
-  F --> G[Counting (Subread/featureCounts)]
-  G --> H[DESeq2 Analysis + Visualization]
-  H --> I[Output Files]
-```</code></pre>
+1. **Directory Setup**  
+   Create folders for raw data, trimmed reads, reference genome, and alignments.
 
+2. **Tool Installation**  
+   Install Miniconda and required packages using Bioconda.
+
+3. **Quality Control**  
+   Run FastQC and summarize results with MultiQC.
+
+4. **Trimming**  
+   Trim low-quality bases and adapters using Trimmomatic.
+
+5. **Alignment**  
+   - Index the reference genome using BWA  
+   - Align reads using BWA MEM  
+   - Convert and sort SAM to BAM using SAMtools
+
+6. **Quantification**  
+   Use Subread’s `featureCounts` to count mapped reads per gene.
+
+7. **Differential Expression Analysis**  
+   Use DESeq2 in R to identify differentially expressed genes.
+
+8. **Visualization**  
+   Generate volcano plots and heatmaps using R scripts.
 
 ---
 
@@ -49,10 +81,11 @@ graph TD
 | Step                | Tool                      | Description                                  |
 |---------------------|---------------------------|----------------------------------------------|
 | QC                  | `FastQC`, `MultiQC`        | Raw read quality assessment                  |
-| Trimming            | `Trimmomatic`              | Adapter and low-quality base removal         |
-| Alignment           | `BWA`, `SAMtools`          | Read alignment and BAM sorting               |
-| Read Quantification | `Subread (featureCounts)`  | Count reads mapped to genes                  |
-| Analysis & Plots    | `R + DESeq2`               | DEG analysis, volcano & heatmap generation   |
+| Trimming            | `Trimmomatic`              | Adapter and base quality trimming            |
+| Alignment           | `BWA`, `SAMtools`          | Read alignment and sorting                   |
+| Quantification      | `Subread (featureCounts)`  | Gene-level read counting                     |
+| Analysis            | `R`, `DESeq2`              | DEG analysis and statistical testing         |
+| Visualization       | `ggplot2`, `pheatmap`      | Volcano and heatmap plotting in R            |
 
 ---
 
@@ -61,11 +94,11 @@ graph TD
 ```
 ~/workdir/
 ├── fqData/          # Raw FASTQ files
-├── trimmed/         # Cleaned reads after Trimmomatic
-├── sample_data/     # Reference genome & annotation
+├── trimmed/         # Cleaned reads
+├── sample_data/     # Reference genome & GTF
 ├── bwa_align/
-│   ├── bwaIndex/    # Indexed reference files
-│   └── alignments/  # Aligned BAM/SAM files
+│   ├── bwaIndex/    # BWA index files
+│   └── alignments/  # Sorted BAM files
 ```
 
 ---
@@ -76,36 +109,50 @@ graph TD
 bash RNA_script.sh
 ```
 
-✅ Make sure your reference genome (FASTA) and annotation (GTF) are in `sample_data/`.
+✅ Ensure the reference genome (FASTA) and annotation (GTF) are placed in `sample_data/`.
 
 ---
 
 ## 🧾 Output
 
-- 📑 **QC Reports**: HTML summaries from FastQC and MultiQC  
-- 📎 **Trimmed Reads**: Clean FASTQ files  
-- 📂 **Alignments**: Sorted BAM files  
-- 📊 **Counts Table**: Gene expression matrix (from `featureCounts`)  
-- 📈 **Plots**: Volcano plot and heatmap (from R scripts)
+- 📑 Quality Control Reports (FastQC/MultiQC)
+- ✂️ Trimmed FASTQ files
+- 🧬 Aligned BAM files
+- 🧮 Counts matrix (from featureCounts)
+- 📊 DEG results (DESeq2)
+- 🖼 Volcano plot and heatmap
 
 ---
 
 ## 💻 System Requirements
 
-- 🐧 Unix/Linux OS
-- 🧠 8GB+ RAM
-- 🌐 Internet access
-- 📦 Conda (installed via Miniconda in the script)
-- 📊 R + Bioconductor packages
+- Unix/Linux system
+- 8GB+ RAM
+- Internet connection (for installing dependencies)
+- Disk space: ~20 GB recommended
+
+---
+
+## 📂 Example Output Files
+
+- `counts_matrix.txt`
+- `deseq2_results.csv`
+- `volcano_plot.png`
+- `heatmap_top_DEGs.png`
 
 ---
 
 ## 👨‍🏫 Instructor
 
-Developed and maintained by  
 **Assem Kadry Elsherif**  
 Assistant Lecturer, School of Biotechnology  
 Nile University, Egypt
 
 📧 akadry@nu.edu.eg  
 🌍 GitHub: [assem-kadry](https://github.com/assem-kadry)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
