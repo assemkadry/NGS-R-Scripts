@@ -5,8 +5,14 @@ suppressMessages(library(ggplot2))
 # Read from stdin
 res <- read.table("stdin", header = TRUE, sep = "\t", row.names = 1)
 
+# Convert columns to numeric
+res$log2FoldChange <- as.numeric(res$log2FoldChange)
+res$padj <- as.numeric(res$padj)
+
+# Filter out rows with NA padj
+res <- res[!is.na(res$padj), ]
+
 # Prepare data
-res <- res[complete.cases(res), ]
 res$gene <- rownames(res)
 res$threshold <- "Not Sig"
 res$threshold[res$padj < 0.05 & res$log2FoldChange > 1] <- "Up"
