@@ -31,15 +31,14 @@ It guides undergraduate students through a practical RNA-seq data analysis workf
 
 ```mermaid
 graph TD
-  A[Start] --> B[📂 Directory Setup]
-  B --> C[🔧 Tool Installation (via Bioconda)]
-  C --> D[🧼 Quality Control (FastQC + MultiQC)]
-  D --> E[✂️ Trimming (Trimmomatic)]
-  E --> F[🔗 Alignment (BWA + SAMtools)]
-  F --> G[🧮 Counting (Subread/featureCounts)]
-  G --> H[📊 DESeq2 Analysis + Visualization]
-  H --> I[🎯 Output Files]
-```
+  A[Start] --> B[Directory Setup]
+  B --> C[Tool Installation (via Bioconda)]
+  C --> D[Quality Control (FastQC + MultiQC)]
+  D --> E[Trimming (Trimmomatic)]
+  E --> F[Alignment (BWA + SAMtools)]
+  F --> G[Counting (Subread/featureCounts)]
+  G --> H[DESeq2 Analysis + Visualization]
+  H --> I[Output Files]
 
 ---
 
