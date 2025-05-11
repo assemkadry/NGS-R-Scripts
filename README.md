@@ -1,74 +1,110 @@
+# 🧬 RNA-Seq Differential Expression Pipeline
 
-# RNA-Seq Differential Expression Analysis Pipeline
+> 🔬 *End-to-end workflow for preprocessing, aligning, counting, and analyzing paired-end RNA-seq data.*
 
-This repository contains scripts for performing differential gene expression analysis using RNA-seq data. It includes steps for data preprocessing, DESeq2 analysis, visualization (heatmaps and volcano plots), and a shell script for basic environment setup.
+---
 
-## Folder Structure
+## 📚 Educational Context
+
+This pipeline was designed as a teaching resource for the **Next Generation Sequencing (NGS)** course  
+at the **School of Biotechnology, Nile University, Egypt**.  
+It guides undergraduate students through a practical RNA-seq data analysis workflow using real tools and datasets.
+
+---
+
+## 📁 Dataset Overview
+
+**Samples:**
+- 🧪 **Cancer (3 replicates)**  
+  `cancer_sample_1.read1.fastq.gz` & `read2.fastq.gz`  
+  `cancer_sample_2.read1.fastq.gz` & `read2.fastq.gz`  
+  `cancer_sample_3.read1.fastq.gz` & `read2.fastq.gz`  
+
+- 🧬 **Normal (3 replicates)**  
+  `normal_sample_1.read1.fastq.gz` & `read2.fastq.gz`  
+  `normal_sample_2.read1.fastq.gz` & `read2.fastq.gz`  
+  `normal_sample_3.read1.fastq.gz` & `read2.fastq.gz`
+
+---
+
+## 🧪 Pipeline Steps
+
+```mermaid
+graph TD
+  A[Start] --> B[📂 Directory Setup]
+  B --> C[🔧 Tool Installation (via Bioconda)]
+  C --> D[🧼 Quality Control (FastQC + MultiQC)]
+  D --> E[✂️ Trimming (Trimmomatic)]
+  E --> F[🔗 Alignment (BWA + SAMtools)]
+  F --> G[🧮 Counting (Subread/featureCounts)]
+  G --> H[📊 DESeq2 Analysis + Visualization]
+  H --> I[🎯 Output Files]
+```
+
+---
+
+## 🛠️ Tools Used
+
+| Step                | Tool                      | Description                                  |
+|---------------------|---------------------------|----------------------------------------------|
+| QC                  | `FastQC`, `MultiQC`        | Raw read quality assessment                  |
+| Trimming            | `Trimmomatic`              | Adapter and low-quality base removal         |
+| Alignment           | `BWA`, `SAMtools`          | Read alignment and BAM sorting               |
+| Read Quantification | `Subread (featureCounts)`  | Count reads mapped to genes                  |
+| Analysis & Plots    | `R + DESeq2`               | DEG analysis, volcano & heatmap generation   |
+
+---
+
+## 📁 Folder Structure
 
 ```
-.
-├── DESeq2.r           # Differential expression analysis using DESeq2
-├── heatmap.r          # Script to generate clustered heatmaps
-├── volcano_plot.r     # Script to generate volcano plots
-├── RNA_script.sh      # Shell script for data preparation or environment setup
-└── README.md          # This file
+~/workdir/
+├── fqData/          # Raw FASTQ files
+├── trimmed/         # Cleaned reads after Trimmomatic
+├── sample_data/     # Reference genome & annotation
+├── bwa_align/
+│   ├── bwaIndex/    # Indexed reference files
+│   └── alignments/  # Aligned BAM/SAM files
 ```
 
-## Requirements
+---
 
-- **R (version ≥ 4.0)**
-- **R packages:**
-  - DESeq2
-  - pheatmap
-  - ggplot2
-  - EnhancedVolcano (optional)
-  - readr
-  - dplyr
-- **Shell utilities (bash, conda, etc.)** for environment setup
-
-## Usage
-
-### 1. Set up the environment
+## ▶️ How to Run
 
 ```bash
 bash RNA_script.sh
 ```
 
-This script installs dependencies and prepares your environment.
+✅ Make sure your reference genome (FASTA) and annotation (GTF) are in `sample_data/`.
 
-### 2. Run DESeq2 analysis
+---
 
-```r
-source("DESeq2.r")
-```
+## 🧾 Output
 
-- Input: Raw count matrix and sample metadata
-- Output: Normalized counts and a list of differentially expressed genes
+- 📑 **QC Reports**: HTML summaries from FastQC and MultiQC  
+- 📎 **Trimmed Reads**: Clean FASTQ files  
+- 📂 **Alignments**: Sorted BAM files  
+- 📊 **Counts Table**: Gene expression matrix (from `featureCounts`)  
+- 📈 **Plots**: Volcano plot and heatmap (from R scripts)
 
-### 3. Generate Heatmap
+---
 
-```r
-source("heatmap.r")
-```
+## 💻 System Requirements
 
-- Input: DESeq2 results
-- Output: Clustered heatmap of top differentially expressed genes
+- 🐧 Unix/Linux OS
+- 🧠 8GB+ RAM
+- 🌐 Internet access
+- 📦 Conda (installed via Miniconda in the script)
+- 📊 R + Bioconductor packages
 
-### 4. Create Volcano Plot
+---
 
-```r
-source("volcano_plot.r")
-```
+## 👨‍🏫 Instructor
 
-- Input: DESeq2 results
-- Output: Volcano plot highlighting significant genes
+Developed and maintained by  
+**Assem Kadry Elsherif**  
+Assistant Lecturer, School of Biotechnology  
+Nile University, Egypt
 
-## Author
-
-Assem Kadry Elsherif  
-Assistant Lecturer, School of Biotechnology, Nile University  
-Email: akadry@nu.edu.eg
-
-## License
-
-This project is licensed under the MIT License.
+📧 akadry@nu.edu.eg  
+🌍 GitHub: [assem-kadry](https://github.com/assem-kadry)
