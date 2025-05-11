@@ -1,22 +1,22 @@
 
 # Data Description
-This dataset contains paired-end RNA sequencing (RNA-seq) data from six biological samples, categorized into:
-
-Cancer Samples (3 biological replicates)
-    •   cancer_sample_1.read1.fastq.gz & read2.fastq.gz
-    •   cancer_sample_2.read1.fastq.gz & read2.fastq.gz
-    •   cancer_sample_3.read1.fastq.gz & read2.fastq.gz
-
-Each pair (read1 and read2) represents paired-end reads from a single cancer sample.
-
-Normal Samples (3 biological replicates)
-    •   normal_sample_1.read1.fastq.gz & read2.fastq.gz
-    •   normal_sample_2.read1.fastq.gz & read2.fastq.gz
-    •   normal_sample_3.read1.fastq.gz & read2.fastq.gz
-
-Each pair represents matched normal (non-cancerous) tissue from control samples.
-
-
+#This dataset contains paired-end RNA sequencing (RNA-seq) data from six biological samples, categorized into:
+#
+#Cancer Samples (3 biological replicates)
+#    •   cancer_sample_1.read1.fastq.gz & read2.fastq.gz
+#    •   cancer_sample_2.read1.fastq.gz & read2.fastq.gz
+#    •   cancer_sample_3.read1.fastq.gz & read2.fastq.gz
+#
+#Each pair (read1 and read2) represents paired-end reads from a single cancer sample.
+#
+#Normal Samples (3 biological replicates)
+#    •   normal_sample_1.read1.fastq.gz & read2.fastq.gz
+#    •   normal_sample_2.read1.fastq.gz & read2.fastq.gz
+#    •   normal_sample_3.read1.fastq.gz & read2.fastq.gz
+#
+#Each pair represents matched normal (non-cancerous) tissue from control samples.
+#
+#
 #################################################################################################################
 
 
@@ -68,9 +68,7 @@ multiqc -z -o . .
 # Error Trimming
 cd ~/workdir/trimmed 
 
-
 adap="$CONDA_PREFIX/share/trimmomatic-0.39-2/adapters"
-
 
 # Perform error trimming on all raw data
 for condition in cancer normal; do
@@ -140,15 +138,12 @@ for condition in cancer normal; do
   done
 done
 
-
 #################################################################################################################
 
 # Quantification using featureCounts
 featureCounts -p -a $GTF -g gene_name -o counts.txt  bams/cancer_*.bam  bams/normal_*.bam
 # Simplify the file to keep only the count columns.
 cat counts.txt | cut -f 1,7-12 > simple_counts.txt
-
-
 
 # For differential expression, we will use DESeq R package and for visualization, we will use gplots package. 
 conda install r
