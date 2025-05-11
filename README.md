@@ -1,92 +1,74 @@
-# DESeq2 Differential Expression Pipeline
 
-This repository contains a minimal, streamlined pipeline for differential expression analysis using RNA-seq count data. It includes:
+# RNA-Seq Differential Expression Analysis Pipeline
 
-- Differential expression analysis with **DESeq2**
-- Visualization with **Volcano Plot**
-- Visualization with **Heatmap**
+This repository contains scripts for performing differential gene expression analysis using RNA-seq data. It includes steps for data preprocessing, DESeq2 analysis, visualization (heatmaps and volcano plots), and a shell script for basic environment setup.
 
----
+## Folder Structure
 
-## 📂 Files
+```
+.
+├── DESeq2.r           # Differential expression analysis using DESeq2
+├── heatmap.r          # Script to generate clustered heatmaps
+├── volcano_plot.r     # Script to generate volcano plots
+├── RNA_script.sh      # Shell script for data preparation or environment setup
+└── README.md          # This file
+```
 
-| Script            | Description |
-|------------------|-------------|
-| `DESeq2.r`        | Runs DESeq2 on a count matrix (via stdin). Outputs a results table and normalized counts for significant DEGs. |
-| `volcano_plot.r`  | Creates a volcano plot PDF from DESeq2 results (via stdin). Highlights up/down-regulated genes. |
-| `heatmap.r`       | Generates a z-score normalized heatmap (via stdin) of differentially expressed genes. Outputs a PDF. |
+## Requirements
 
----
+- **R (version ≥ 4.0)**
+- **R packages:**
+  - DESeq2
+  - pheatmap
+  - ggplot2
+  - EnhancedVolcano (optional)
+  - readr
+  - dplyr
+- **Shell utilities (bash, conda, etc.)** for environment setup
 
-## 🔧 Requirements
+## Usage
 
-These R packages must be installed:
+### 1. Set up the environment
+
+```bash
+bash RNA_script.sh
+```
+
+This script installs dependencies and prepares your environment.
+
+### 2. Run DESeq2 analysis
 
 ```r
-install.packages(c("ggplot2", "gplots", "RColorBrewer"))
-if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-BiocManager::install("DESeq2")
+source("DESeq2.r")
 ```
 
----
+- Input: Raw count matrix and sample metadata
+- Output: Normalized counts and a list of differentially expressed genes
 
-## ▶️ Usage
+### 3. Generate Heatmap
 
-### 1. Run DESeq2
-
-```bash
-cat counts.tsv | Rscript DESeq2.r 3x3
+```r
+source("heatmap.r")
 ```
 
-- Assumes 3 replicates per group (NxM format).
-- Outputs:
-  - `results_deseq2.tsv`
-  - `norm-matrix-deseq2.tsv`
+- Input: DESeq2 results
+- Output: Clustered heatmap of top differentially expressed genes
 
----
+### 4. Create Volcano Plot
 
-### 2. Generate a Volcano Plot
-
-```bash
-cat results_deseq2.tsv | Rscript volcano_plot.r > volcano_plot.pdf
+```r
+source("volcano_plot.r")
 ```
 
-- Uses adjusted p-values (`padj`) and log2 fold change.
-- Highlights significant genes.
+- Input: DESeq2 results
+- Output: Volcano plot highlighting significant genes
 
----
+## Author
 
-### 3. Generate a Heatmap
+Assem Kadry Elsherif  
+Assistant Lecturer, School of Biotechnology, Nile University  
+Email: akadry@nu.edu.eg
 
-```bash
-cat norm-matrix-deseq2.tsv | Rscript heatmap.r > heatmap.pdf
-```
-
-- Z-score scaled across rows (genes).
-- Samples are clustered and visualized.
-
----
-
-## 📝 Notes
-
-- All scripts accept input via `stdin` for easy shell integration.
-- Sample column names should follow a recognizable pattern (e.g., `cancer_1`, `normal_1`).
-- Output is always written to standard output or named files.
-
----
-
-## 🧪 Sample Input Format
-
-**counts.tsv**
-```
-gene	sample1	sample2	sample3	sample4	sample5	sample6
-GENE1	10	20	12	200	210	190
-GENE2	0	1	0	150	140	160
-...
-```
-
----
-
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
