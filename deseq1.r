@@ -1,78 +1,56 @@
-# This program can be run as
-# cat counts.txt | Rscript deseq1.r NxM (where N is the number of groups and M is the number of replicates per group)
+#!/usr/bin/env Rscript
 
-# and produces a table with differentially expressed genes.
-# To install the requirements run the program with the 'install` parameter.
+# Run with: cat counts.txt | Rscript deseq2_pipe.R 3x3
 
+args <- commandArgs(trailingOnly = TRUE)
 
-# Read the command line arguments.
-args = commandArgs(trailingOnly=TRUE)
-
-if (length(args)!=1) {
-  stop("Experimental design must be specified as: NxM at the command line", call.=FALSE)
+if (length(args) != 1) {
+  stop("Usage: Rscript deseq2_pipe.R NxM  (e.g., 3x3)", call. = FALSE)
 }
 
-first = args[1]
+# Parse design
+design <- strsplit(args[1], "x")[[1]]
+cond1_num <- as.integer(design[1])
+cond2_num <- as.integer(design[2])
+conditions <- factor(c(rep("cond1", cond1_num), rep("cond2", cond2_num)))
 
-# Extract the experimental design from the command line.
-design = unlist(strsplit(first, 'x'))
+# Load libraries
+suppressMessages({
+  library(DESeq2)
+})
 
-# Find the design counts.
-cond1_num = as.integer(design[1])
-cond2_num = as.integer(design[2])
+# Read from stdin
+count_data <- read.table(file("stdin"), header = TRUE, row.names = 1, sep = "\t")
 
-# Set up the conditions based on the experimental setup.
-cond_1 = rep("cond1", cond1_num)
-cond_2 = rep("cond2", cond2_num)
+# Ensure integer counts
+count_matrix <- round(as.matrix(count_data))
+mode(count_matrix) <- "integer"
 
-# Load the library.
-library(DESeq)
+# Create metadata
+col_data <- data.frame(condition = conditions)
+rownames(col_data) <- colnames(count_matrix)
 
-# Read the data from the file.
-counts = read.table("stdin", header=TRUE, row.names=1, sep="\t")
+# Create DESeq2 object
+dds <- DESeqDataSetFromMatrix(countData = count_matrix,
+                              colData = col_data,
+                              design = ~ condition)
 
-# Since Kallisto generates the estimated counts as real numbers
-# and DESeq 1 allows only integers we need to convert real numbers to integers here.
-int_counts = as.matrix(counts)
-int_counts = apply(int_counts, 2, function(x) as.integer(round(x)) + 1)
-row.names(int_counts) <- row.names(counts)
+dds <- dds[rowSums(counts(dds)) > 10, ]  # filter low counts
+dds <- DESeq(dds)
 
-# Replace with integer counts
-counts <- int_counts
+# Differential expression
+res <- results(dds, contrast = c("condition", "cond1", "cond2"))
+res <- res[order(res$padj), ]
+write.table(res, file = "", sep = "\t", quote = FALSE)
 
-# Set up the conditions.
-conditions = factor(c(cond_1, cond_2))
+# Get DEGs with padj < 0.05
+de_ids <- rownames(subset(res, padj < 0.05))
 
-# Create a count table
-cds = newCountDataSet(counts, conditions)
+# Normalized counts
+norm_counts <- counts(dds, normalized = TRUE)
+norm_df <- data.frame(id = rownames(norm_counts), norm_counts)
+de_df <- norm_df[norm_df$id %in% de_ids, ]
 
-# Estimate size factors.
-cds = estimateSizeFactors(cds)
-
-# Estimate dispersions
-cds = estimateDispersions(cds)
-
-# Compute a standard comparison
-results = nbinomTest(cds, "cond1", "cond2")
-
-# Sort the results data frame by the padj and foldChange columns.
-sorted = results[with(results, order(padj, -foldChange)), ]
-
-# Write the results to the standard output
-write.table(sorted, file="", sep="\t", row.name=FALSE, quote=FALSE)
-
-# Keep only the differentiall expressed values.
-diffs <- subset(sorted, padj < 0.05, select=c(id))
-
-# Get normalized counts and write to a file
-nc = counts(cds, normalized=TRUE )
-
-# Turn it into a dataframe to have proper column names.
-dt = data.frame("id"=rownames(nc), nc)
-
-# Keep only the rows that were differentially expressed before.
-keep = subset(dt, id %in% diffs$id)
-
-# Save into the normalize data matrix.
-write.table(keep, file="norm-matrix-deseq1.txt", sep="\t", row.name=FALSE, col.names=TRUE, quote=FALSE)
-
+# Save
+write.table(de_df, file = "norm-matrix-deseq2.txt", sep = "\t",
+            quote = FALSE, row.names = FALSE, col.names = TRUE)
