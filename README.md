@@ -137,8 +137,8 @@ bash RNA_script.sh
 
 - `counts_matrix.txt`
 - `deseq2_results.csv`
-- `volcano_plot.png`
-- `heatmap_top_DEGs.png`
+- `volcano_plot.pdf`
+- `heatmap.pdf`
 
 ---
 
