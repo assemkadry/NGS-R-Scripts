@@ -149,7 +149,7 @@ Assistant Lecturer, School of Biotechnology
 Nile University, Egypt
 
 📧 akadry@nu.edu.eg  
-🌍 GitHub: [assemkadry](https://github.com/assemkadry)
+🌍 [LinkedIn Author Profile](https://www.linkedin.com/in/assem-kadry-elsherif-ab401213a/)
 
 ---
 
