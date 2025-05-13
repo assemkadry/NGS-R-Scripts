@@ -6,7 +6,7 @@ set -euo pipefail
 # ===============================================================
 
 # ---------------------------------------------------------------
-# Data Descriptipn
+# Data Description
 # ---------------------------------------------------------------
 # This dataset contains paired-end RNA sequencing (RNA-seq) data from six biological samples, categorized into:
 
@@ -84,7 +84,7 @@ for condition in cancer normal; do
     trimmomatic PE -phred33 -trimlog trimLogFile -summary statsSummaryFile $read1 $read2 \
       $trimmed_read1 ~/workdir/trimmed/${condition}_sample_${i}.read1.unpaired.fastq.gz \
       $trimmed_read2 ~/workdir/trimmed/${condition}_sample_${i}.read2.unpaired.fastq.gz \
-      ILLUMINACLIP:$adap/TruSeq3-PE-2.fa:2:30:10:1 SLIDINGWINDOW:4:15 MINLEN:36  done
+      ILLUMINACLIP:$adap/TruSeq3-PE-2.fa:2:30:10:1 SLIDINGWINDOW:4:15 MINLEN:36
     done  
 done
 
