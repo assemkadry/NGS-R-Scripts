@@ -27,8 +27,7 @@ set -euo pipefail
 # ------------------------------
 # Step 1: Set up directories
 # ------------------------------
-mkdir -p "$HOME"/workdir/{fqData,sample_data,trimmed,bwa_align/bwaIndex}
-
+mkdir -p "$HOME"/workdir/{fqData,sample_data,trimmed,bwa_align/bwaIndex,diff_exp/{bams,sam_files},scripts}
 # ------------------------------
 # Step 2: Install software with conda
 # ------------------------------
@@ -111,7 +110,6 @@ GTF="$HOME"/workdir/sample_data/chr22.gtf
 # ------------------------------
 # Step 8: Align reads with BWA 
 # ------------------------------
-mkdir -p "$HOME"/workdir/diff_exp/{bams,sam_files}
 cd "$HOME"/workdir/diff_exp
 
 for condition in cancer normal; do
@@ -148,7 +146,7 @@ conda install r
 conda install r-gplots
 conda install -c bioconda bioconductor-deseq2
 
-mkdir -p "$HOME"/workdir/scripts && cd "$HOME"/workdir/scripts
+cd "$HOME"/workdir/scripts
 wget https://raw.githubusercontent.com/assemkadry/NGS-R-Scripts/main/DESeq2.r
 wget https://raw.githubusercontent.com/assemkadry/NGS-R-Scripts/main/volcano_plot.r
 wget https://raw.githubusercontent.com/assemkadry/NGS-R-Scripts/main/heatmap.r
