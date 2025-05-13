@@ -28,6 +28,7 @@ set -euo pipefail
 # Step 1: Set up directories
 # ------------------------------
 mkdir -p "$HOME"/workdir/{fqData,sample_data,trimmed,bwa_align/bwaIndex,diff_exp/{bams,sam_files},scripts}
+
 # ------------------------------
 # Step 2: Install software with conda
 # ------------------------------
